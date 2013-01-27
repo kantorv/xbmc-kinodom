@@ -26,13 +26,6 @@ def Categories():
         addDir(tag['title'].encode('utf-8'), "%s%s" % (url  ,  tag['href']), 20)
 
 
-
-def Movies(url):
-	html = getHTML(url)
-	movie_links = re.compile('<h1> <a href="(.+?)">(.+?)</a>   </h1>').findall(html.decode('windows-1251').encode('utf-8'))
-
-	for link, title in movie_links:
-	    addDir(title[:-12], link, 30)
     
     
 
@@ -54,22 +47,6 @@ def MoviesLinks(url):
             print pageurl
             addDir(pagetitle,pageurl , 20)
     
-    
-def Series(url):
-    html = getHTML(url)
-    doc = BeautifulSoup(html.decode('windows-1251'))
-    embeded = doc.findAll('embed', attrs = {'flashvars': lambda vars: len(vars) > 0})
-    print embeded
-    #xbmc.output(embeded)
-    playlist =  re.compile('file=(.+?)&playlist').findall(embeded.pop()['flashvars']).pop()
-    playlist_xml =  getHTML(playlist)
-    #foo = et.XML(playlist_xml)
-    #.decode('windows-1251').encode('utf-8')
-    trackxml = re.compile('track>(.+?)</track').findall(playlist_xml.decode('windows-1251'))
-    for track in trackxml:
-        movie_links = re.compile('title>(.+?)</title(.+?)location>(.+?)</location').findall(track)
-        for a,b,c in movie_links:
-            addLink(a.encode("utf-8"), c)
 
 
 def Seasons(url):
@@ -91,19 +68,6 @@ def Seasons(url):
         for j in i['playlist']:
             addLink("------->%s" % j['comment'].encode("utf-8"), j['file'])
 
-def Episodes(playlist_url):
-     playlist_json =  getHTML(playlist_url)
-     playlist_dict = json.loads( playlist_json)
-     
-"""
-    foo = et.XML(playlist_xml)
-    #.decode('windows-1251').encode('utf-8')
-    trackxml = re.compile('track>(.+?)</track').findall(playlist_xml.decode('windows-1251'))
-    for track in trackxml:
-        movie_links = re.compile('title>(.+?)</title(.+?)location>(.+?)</location').findall(track)
-        for a,b,c in movie_links:
-            addLink(a.encode("utf-8"), c)
-"""
 
 
 
